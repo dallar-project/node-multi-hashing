@@ -11,8 +11,10 @@ void groestl_hash(const char* input, char* output, uint32_t len)
 {
     char hash1[64];
     char hash2[64];
+    char hash3[64];
     
     sph_groestl512_context ctx_groestl;
+    
     sph_groestl512_init(&ctx_groestl);
     sph_groestl512(&ctx_groestl, input, len);
     sph_groestl512_close(&ctx_groestl, &hash1);
@@ -20,7 +22,10 @@ void groestl_hash(const char* input, char* output, uint32_t len)
     sph_groestl512(&ctx_groestl, hash1, 64);
     sph_groestl512_close(&ctx_groestl, &hash2);
     
-    memcpy(output, &hash2, 32);
+    sph_groestl512(&ctx_groestl, hash2, 64);
+    sph_groestl512_close(&ctx_groestl, &hash3);
+    
+    memcpy(output, &hash3, 32);
 }
 
 void groestlmyriad_hash(const char* input, char* output, uint32_t len)
